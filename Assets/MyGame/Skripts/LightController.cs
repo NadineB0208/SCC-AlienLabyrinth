@@ -1,16 +1,16 @@
 using UnityEngine;
 using System.Collections;
 using System.Text;
+using Unity.VisualScripting;
 
 public class LightController : MonoBehaviour
 {
     public Light lamp;
-    public float dotDuration = 0.2f;
-    public float dashDuration = 0.6f;
-    public float symbolPauseDuration = 0.2f;
-    public float wordPauseDuration = 0.8f;
-    public string messageToTransmit = "Hallo Du";
-
+    public float dotDuration = 0.5f;
+    public float dashDuration = 1f;
+    public float symbolPauseDuration = 0.3f;
+    public float wordPauseDuration = 1.3f;
+    public string messageToTransmit = "Daten";
     private void Start()
     {
         if (lamp == null)
@@ -18,9 +18,15 @@ public class LightController : MonoBehaviour
             Debug.LogError("Keine Lichtkomponente zugewiesen!");
             enabled = false;
         }
-        StartCoroutine(BlinkMessageInMorse(messageToTransmit.ToUpper()));
+        // StartCoroutine(BlinkMessageInMorse(messageToTransmit.ToUpper()));
     }
 
+    private void OnMouseDown()
+    {
+        StopAllCoroutines();
+        StartCoroutine(BlinkMessageInMorse(messageToTransmit.ToUpper()));
+        Debug.Log("Play Morse");
+    }
     private IEnumerator BlinkMessageInMorse(string message)
     {
         StringBuilder morseCodeText = new StringBuilder();
@@ -36,10 +42,12 @@ public class LightController : MonoBehaviour
                     lamp.enabled = true;
                     if (symbol == '.')
                     {
+                        lamp.color = Color.red;
                         yield return new WaitForSeconds(dotDuration);
                     }
                     else if (symbol == '-')
                     {
+                        lamp.color = Color.blue;
                         yield return new WaitForSeconds(dashDuration);
                     }
                     lamp.enabled = false;
